@@ -28,6 +28,31 @@
   color: #61dafb;
 }
 
+.pagination > li > a {
+  background-color: white;
+  color: #5a4181;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+  color: #5a5a5a;
+  background-color: #eee;
+  border-color: #ddd;
+}
+
+.pagination > .active > a {
+  color: white;
+  background-color: #5bc0de !important;
+  border: solid 1px #5bc0de !important;
+}
+
+.pagination > .active > a:hover {
+  background-color: #5bc0de !important;
+  border: solid 1px #5bc0de;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
