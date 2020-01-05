@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Posts from './components/Posts';
+import Pagination from './components/Pagination';
 import axios from 'axios';
-import ReactPaginate from 'react-paginate';
 import './App.css';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
 
 const App = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5);
+  let [postsPerPage, setPostsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,31 +28,71 @@ const App = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPosts = posts.length;
 
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  return (
-    <div>
-      <div className='container mt-5'>
-        <h1 className='text-primary mb-3'>Pagination Challenge</h1>
-        <h2 className='text-secondary mb-3'>Timeline</h2>
-        <Posts posts={currentPosts} loading={loading} />
+  //Setting Posts Per page
+  const settingPostsNum = num => {
+    setPostsPerPage(num);
+  };
+  //handling page search
+  const handleInput = value => {
+    setSearchInput(value);
+  };
 
-        <ReactPaginate
-          pageCount={posts.length / 5}
-          pageRangeDisplayed={3}
-          marginPagesDisplayed={3}
-          initialPage={0}
-          onPageChange={v => paginate(v.selected + 1)}
-          containerClassName={'pagination'}
-          pageClassName={'page-link'}
-          nextClassName={'page-link'}
-          previousClassName={'page-link'}
-          activeClassName={'page-item active'}
-          disabledClassName={'page-item disabled'}
-          breakClassName={'page-link'}
+  const handleSearchOnClick = () => {
+    paginate(searchInput);
+  };
+
+  return (
+    <div className='container mt-5'>
+      <h1 className='text-primary mb-3'>My Blog</h1>
+      <Posts posts={currentPosts} loading={loading} />
+
+      <Dropdown>
+        <Dropdown.Toggle variant='success' id='dropdown-basic'>
+          Posts Per Page
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => settingPostsNum(5)}>5</Dropdown.Item>
+          <Dropdown.Item onClick={() => settingPostsNum(10)}>10</Dropdown.Item>
+          <Dropdown.Item onClick={() => settingPostsNum(20)}>20</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+
+      <p>
+        Showing page {currentPage} of {Math.ceil(totalPosts / postsPerPage)}
+      </p>
+
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={posts.length}
+        paginate={paginate}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        indexOfLastPost={indexOfLastPost}
+        indexOfFirstPost={indexOfFirstPost}
+        currentPosts={currentPosts}
+        setPostsPerPage={setPostsPerPage}
+      />
+      <div class='btn-group'>
+        <input
+          type='text'
+          class='form-control'
+          placeholder='Enter page number'
+          onChange={event => handleInput(event.target.value)}
         />
+        <span class='input-group-addon'>{}</span>
+        <Button
+          onClick={() => handleSearchOnClick()}
+          variant='primary'
+          type='submit'
+        >
+          Search
+        </Button>
       </div>
     </div>
   );
