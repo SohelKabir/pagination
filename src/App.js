@@ -79,7 +79,7 @@ const App = () => {
         currentPosts={currentPosts}
         setPostsPerPage={setPostsPerPage}
       />
-      <div class='btn-group'>
+      <div className='btn-group'>
         <input
           type='text'
           class='form-control'
